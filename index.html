@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiShowcase - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            background-color: #f8fafc; /* Terang: slate-50 */
+            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1e293b;
+        }
+
+        /* Animated Blob Background (Light/Pastel) */
+        .blob {
+            position: fixed;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: move 20s infinite alternate ease-in-out;
+        }
+        .blob-1 {
+            width: 400px; height: 400px;
+            background: #93c5fd; /* Light Blue */
+            top: -100px; left: -100px;
+        }
+        .blob-2 {
+            width: 500px; height: 500px;
+            background: #f9a8d4; /* Light Pink */
+            bottom: -200px; right: -100px;
+            animation-delay: -5s;
+        }
+        .blob-3 {
+            width: 300px; height: 300px;
+            background: #fde047; /* Light Yellow */
+            top: 40%; left: 30%;
+            animation-delay: -10s;
+        }
+
+        @keyframes move {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 100px) scale(1.2); }
+            100% { transform: translate(-50px, -50px) scale(0.9); }
+        }
+
+        /* Glassmorphism Terang */
+        .glass {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(100, 116, 139, 0.1);
+        }
+
+        .btn-bounce {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+        }
+        .btn-bounce:active { transform: scale(0.92); }
+        .btn-bounce:hover { transform: scale(1.05); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="min-h-screen relative">
+
+    <!-- Background Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- Edit Button -->
+    <button onclick="window.openPasswordModal()" class="fixed top-4 right-4 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg btn-bounce hover:bg-blue-700 transition">
+        <i class="fas fa-edit"></i>
+    </button>
+
+    <!-- Header Logo -->
+    <div class="text-center pt-8">
+        <h1 class="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 drop-shadow-sm">
+            GiShowcase
+        </h1>
+    </div>
+
+    <div class="container mx-auto px-4 py-6 max-w-5xl">
+        <!-- Profile Section -->
+        <div class="glass rounded-3xl p-8 mb-8 text-center flex flex-col items-center relative overflow-hidden">
+            <div class="w-32 h-32 rounded-full border-4 border-white shadow-lg overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
+                <img id="display-profile-img" src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=200&q=80" alt="Profile" class="w-full h-full object-cover">
+            </div>
+            <h2 id="display-name" class="text-2xl font-bold text-slate-800 mb-2">Memuat Data...</h2>
+            <p id="display-bio" class="text-slate-600 max-w-lg mb-6">Sedang terhubung ke server...</p>
+            
+            <!-- Social Media Icons -->
+            <div class="flex gap-4 justify-center">
+                <a id="link-fb" href="#" target="_blank" class="w-12 h-12 rounded-full bg-white shadow flex items-center justify-center text-blue-600 text-xl btn-bounce hover:shadow-md"><i class="fab fa-facebook-f"></i></a>
+                <a id="link-ig" href="#" target="_blank" class="w-12 h-12 rounded-full bg-white shadow flex items-center justify-center text-pink-600 text-xl btn-bounce hover:shadow-md"><i class="fab fa-instagram"></i></a>
+                <a id="link-email" href="#" class="w-12 h-12 rounded-full bg-white shadow flex items-center justify-center text-red-500 text-xl btn-bounce hover:shadow-md"><i class="fas fa-envelope"></i></a>
+                <a id="link-tiktok" href="#" target="_blank" class="w-12 h-12 rounded-full bg-white shadow flex items-center justify-center text-black text-xl btn-bounce hover:shadow-md"><i class="fab fa-tiktok"></i></a>
+                <a id="link-wa" href="#" target="_blank" class="w-12 h-12 rounded-full bg-white shadow flex items-center justify-center text-green-500 text-xl btn-bounce hover:shadow-md"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8 bg-white/40 p-2 rounded-2xl backdrop-blur-md shadow-sm">
+            <button onclick="window.switchTab('foto-prestasi', this)" class="tab-btn active px-6 py-3 rounded-xl font-semibold text-blue-800 bg-white shadow btn-bounce transition">Foto Prestasi</button>
+            <button onclick="window.switchTab('foto-kenangan', this)" class="tab-btn px-6 py-3 rounded-xl font-semibold text-slate-700 hover:bg-white/70 btn-bounce transition">Foto Kenangan</button>
+            <button onclick="window.switchTab('video-prestasi', this)" class="tab-btn px-6 py-3 rounded-xl font-semibold text-slate-700 hover:bg-white/70 btn-bounce transition">Video Prestasi</button>
+            <button onclick="window.switchTab('video-kenangan', this)" class="tab-btn px-6 py-3 rounded-xl font-semibold text-slate-700 hover:bg-white/70 btn-bounce transition">Video Kenangan</button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="glass rounded-3xl p-6 min-h-[400px]">
+            <div id="foto-prestasi" class="tab-content active">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="grid-foto-prestasi"></div>
+            </div>
+            <div id="foto-kenangan" class="tab-content">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="grid-foto-kenangan"></div>
+            </div>
+            <div id="video-prestasi" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="grid-video-prestasi"></div>
+            </div>
+            <div id="video-kenangan" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="grid-video-kenangan"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full">
+            <h2 class="text-2xl font-bold mb-4 text-slate-800 text-center">Akses GiShowcase</h2>
+            <input type="password" id="adminPassword" class="w-full p-3 border rounded-xl mb-4 bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Masukkan password...">
+            <div class="flex gap-2">
+                <button onclick="window.closePasswordModal()" class="w-1/2 py-3 bg-slate-200 rounded-xl font-semibold btn-bounce text-slate-700">Batal</button>
+                <button onclick="window.checkPassword()" class="w-1/2 py-3 bg-blue-600 text-white rounded-xl font-semibold btn-bounce shadow-lg">Masuk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="adminPanel" class="fixed inset-0 bg-slate-50/95 backdrop-blur-md z-[70] hidden overflow-y-auto">
+        <div class="container mx-auto px-4 py-8 max-w-3xl">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-slate-800">Manajemen GiShowcase</h2>
+                <button onclick="window.closeAdminPanel()" class="bg-red-500 text-white p-3 rounded-full btn-bounce shadow-md"><i class="fas fa-times"></i></button>
+            </div>
+
+            <!-- Form Edit Profil & Sosmed -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 mb-8">
+                <h3 class="text-xl font-bold mb-4 border-b pb-2 text-slate-700"><i class="fas fa-user-edit mr-2 text-blue-500"></i>Edit Profil & Sosmed</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="block text-sm font-semibold mb-1 text-slate-600">Nama</label><input type="text" id="edit-name" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-400"></div>
+                    <div><label class="block text-sm font-semibold mb-1 text-slate-600">Bio</label><input type="text" id="edit-bio" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-400"></div>
+                    <div><label class="block text-sm font-semibold mb-1 text-slate-600">Link Facebook</label><input type="text" id="edit-fb" class="w-full p-3 bg-slate-50 border rounded-xl"></div>
+                    <div><label class="block text-sm font-semibold mb-1 text-slate-600">Link Instagram</label><input type="text" id="edit-ig" class="w-full p-3 bg-slate-50 border rounded-xl"></div>
+                    <div><label class="block text-sm font-semibold mb-1 text-slate-600">Email</label><input type="email" id="edit-email" class="w-full p-3 bg-slate-50 border rounded-xl"></div>
+                    <div><label class="block text-sm font-semibold mb-1 text-slate-600">Link TikTok</label><input type="text" id="edit-tiktok" class="w-full p-3 bg-slate-50 border rounded-xl"></div>
+                    <div><label class="block text-sm font-semibold mb-1 text-slate-600">No WhatsApp (62...)</label><input type="text" id="edit-wa" class="w-full p-3 bg-slate-50 border rounded-xl"></div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold mb-1 text-slate-600">Foto Profil Baru</label>
+                        <input type="file" id="edit-profile-img" accept="image/*" class="w-full p-3 bg-slate-50 border rounded-xl">
+                    </div>
+                </div>
+                <button onclick="window.saveProfileToDB()" class="mt-6 w-full bg-blue-600 text-white py-4 rounded-xl font-bold btn-bounce shadow-lg hover:bg-blue-700">Simpan Profil ke Server</button>
+            </div>
+
+            <!-- Form Tambah Media -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+                <h3 class="text-xl font-bold mb-4 border-b pb-2 text-slate-700"><i class="fas fa-plus-circle mr-2 text-blue-500"></i>Tambah Foto / Video</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1 text-slate-600">Kategori</label>
+                        <select id="media-category" class="w-full p-3 bg-slate-50 border rounded-xl outline-none" onchange="window.toggleMediaInput()">
+                            <option value="foto-prestasi">Foto Prestasi</option>
+                            <option value="foto-kenangan">Foto Kenangan</option>
+                            <option value="video-prestasi">Video Prestasi</option>
+                            <option value="video-kenangan">Video Kenangan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1 text-slate-600">Judul</label>
+                        <input type="text" id="media-title" class="w-full p-3 bg-slate-50 border rounded-xl" placeholder="Ketik judul...">
+                    </div>
+                    <div id="file-input-container">
+                        <label class="block text-sm font-semibold mb-1 text-slate-600">File Foto (Disarankan < 1MB)</label>
+                        <input type="file" id="media-file" accept="image/*" class="w-full p-3 bg-slate-50 border rounded-xl">
+                    </div>
+                    <div id="url-input-container" class="hidden">
+                        <label class="block text-sm font-semibold mb-1 text-slate-600">Link URL Video (Youtube/Embed)</label>
+                        <input type="text" id="media-url" class="w-full p-3 bg-slate-50 border rounded-xl" placeholder="https://www.youtube.com/embed/...">
+                    </div>
+                </div>
+                <button onclick="window.addMediaToDB()" class="mt-6 w-full bg-purple-600 text-white py-4 rounded-xl font-bold btn-bounce shadow-lg hover:bg-purple-700">Unggah ke Server</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE MODULE & LOGIC -->
+    <script type="module">
+        // 1. Import Firebase dari Google Server
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCenK0OQMqA1I6enr6egfFfewJ3xgFbRk", 
+            authDomain: "gishowcase.firebaseapp.com",
+            databaseURL: "https://gishowcase-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "gishowcase",
+            storageBucket: "gishowcase.firebasestorage.app",
+            messagingSenderId: "350867177009",
+            appId: "1:350867177009:web:58b6caf206783b4b47df10"
+        };
+
+        // Inisialisasi Firebase
+        let db;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getDatabase(app);
+        } catch (error) {
+            console.error("Firebase belum di-setting");
+        }
+
+        // Default Data jika Database Kosong
+        const defaultProfile = {
+            name: "Nama Anda", bio: "Tulis bio Anda di sini...", fb: "#", ig: "#",
+            email: "contoh@email.com", tiktok: "#", wa: "62812", profileImg: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=200&q=80"
+        };
+
+        // Fungsi Load Data Secara Realtime dari Server
+        function loadDataFromServer() {
+            if(firebaseConfig.databaseURL === "KOSONG") {
+                document.getElementById('display-bio').innerHTML = "<span class='text-red-500 font-bold'>ERROR: Anda belum memasukkan konfigurasi Firebase di dalam kode!</span>";
+                return;
+            }
+
+            // Load Profil
+            onValue(ref(db, 'gishowcase/profile'), (snapshot) => {
+                const data = snapshot.val() || defaultProfile;
+                document.getElementById('display-name').innerText = data.name;
+                document.getElementById('display-bio').innerText = data.bio;
+                document.getElementById('display-profile-img').src = data.profileImg;
+                
+                document.getElementById('link-fb').href = data.fb;
+                document.getElementById('link-ig').href = data.ig;
+                document.getElementById('link-email').href = `mailto:${data.email}`;
+                document.getElementById('link-tiktok').href = data.tiktok;
+                document.getElementById('link-wa').href = `https://wa.me/${data.wa}`;
+
+                // Isi Form Edit
+                document.getElementById('edit-name').value = data.name;
+                document.getElementById('edit-bio').value = data.bio;
+                document.getElementById('edit-fb').value = data.fb;
+                document.getElementById('edit-ig').value = data.ig;
+                document.getElementById('edit-email').value = data.email;
+                document.getElementById('edit-tiktok').value = data.tiktok;
+                document.getElementById('edit-wa').value = data.wa;
+                window.currentProfileImg = data.profileImg;
+            });
+
+            // Load Galeri Media
+            onValue(ref(db, 'gishowcase/media'), (snapshot) => {
+                const data = snapshot.val();
+                let mediaArray = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        mediaArray.push({ id: key, ...data[key] });
+                    });
+                }
+                renderGallery(mediaArray);
+            });
+        }
+
+        window.onload = loadDataFromServer;
+
+        // UI Functions (Tab, Modal, dll)
+        window.switchTab = (tabId, btn) => {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('bg-white', 'text-blue-800', 'shadow');
+                b.classList.add('text-slate-700');
+            });
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('bg-white', 'text-blue-800', 'shadow');
+            btn.classList.remove('text-slate-700');
+        };
+
+        window.openPasswordModal = () => { document.getElementById('passwordModal').classList.remove('hidden'); document.getElementById('adminPassword').value = ''; };
+        window.closePasswordModal = () => { document.getElementById('passwordModal').classList.add('hidden'); };
+        window.checkPassword = () => {
+            if (document.getElementById('adminPassword').value === '30juzz') {
+                window.closePasswordModal();
+                document.getElementById('adminPanel').classList.remove('hidden');
+            } else { alert("Password salah!"); }
+        };
+        window.closeAdminPanel = () => { document.getElementById('adminPanel').classList.add('hidden'); };
+        window.toggleMediaInput = () => {
+            const isVideo = document.getElementById('media-category').value.includes('video');
+            document.getElementById('file-input-container').classList.toggle('hidden', isVideo);
+            document.getElementById('url-input-container').classList.toggle('hidden', !isVideo);
+        };
+
+        // Database Save Functions
+        window.saveProfileToDB = () => {
+            const fileInput = document.getElementById('edit-profile-img');
+            const newProfile = {
+                name: document.getElementById('edit-name').value,
+                bio: document.getElementById('edit-bio').value,
+                fb: document.getElementById('edit-fb').value,
+                ig: document.getElementById('edit-ig').value,
+                email: document.getElementById('edit-email').value,
+                tiktok: document.getElementById('edit-tiktok').value,
+                wa: document.getElementById('edit-wa').value,
+                profileImg: window.currentProfileImg
+            };
+
+            const uploadAndSave = (profileData) => {
+                set(ref(db, 'gishowcase/profile'), profileData)
+                    .then(() => alert("Profil berhasil diupdate di Server!"))
+                    .catch(err => alert("Error: " + err));
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    newProfile.profileImg = e.target.result;
+                    uploadAndSave(newProfile);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                uploadAndSave(newProfile);
+            }
+        };
+
+        window.addMediaToDB = () => {
+            const category = document.getElementById('media-category').value;
+            const title = document.getElementById('media-title').value;
+            const isVideo = category.includes('video');
+            if(!title) { alert('Harap masukkan judul!'); return; }
+
+            const saveToFirebase = (srcValue) => {
+                push(ref(db, 'gishowcase/media'), { category, title, src: srcValue })
+                    .then(() => {
+                        alert('Berhasil diunggah ke Server!');
+                        document.getElementById('media-title').value = '';
+                        document.getElementById('media-file').value = '';
+                        document.getElementById('media-url').value = '';
+                    })
+                    .catch(err => alert("Gagal unggah: " + err));
+            };
+
+            if (isVideo) {
+                const url = document.getElementById('media-url').value;
+                if(!url) { alert('Masukkan link!'); return; }
+                saveToFirebase(url);
+            } else {
+                const fileInput = document.getElementById('media-file');
+                if(fileInput.files.length === 0) { alert('Pilih foto!'); return; }
+                const file = fileInput.files[0];
+                
+                const reader = new FileReader();
+                reader.onload = function(e) { saveToFirebase(e.target.result); };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.deleteMediaFromDB = (id) => {
+            if(confirm("Hapus permanen dari Server?")) {
+                remove(ref(db, 'gishowcase/media/' + id));
+            }
+        };
+
+        function renderGallery(mediaArray) {
+            const containers = {
+                'foto-prestasi': document.getElementById('grid-foto-prestasi'),
+                'foto-kenangan': document.getElementById('grid-foto-kenangan'),
+                'video-prestasi': document.getElementById('grid-video-prestasi'),
+                'video-kenangan': document.getElementById('grid-video-kenangan')
+            };
+            Object.values(containers).forEach(c => c.innerHTML = '');
+
+            mediaArray.forEach(item => {
+                const isVideo = item.category.includes('video');
+                let innerContent = isVideo 
+                    ? `<iframe class="w-full h-48 md:h-64 object-cover" src="${item.src}" frameborder="0" allowfullscreen></iframe>`
+                    : `<img src="${item.src}" alt="${item.title}" class="w-full h-48 object-cover hover:scale-105 transition duration-500">`;
+
+                const html = `
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition group relative border border-slate-100">
+                        ${innerContent}
+                        <div class="p-4 bg-white/90 backdrop-blur-sm relative z-10 border-t border-slate-100">
+                            <h3 class="font-bold text-slate-800">${item.title}</h3>
+                        </div>
+                        <button onclick="window.deleteMediaFromDB('${item.id}')" class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition btn-bounce z-20 shadow-md">
+                            <i class="fas fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                if(containers[item.category]) containers[item.category].innerHTML += html;
+            });
+
+            for (let key in containers) {
+                if(containers[key].innerHTML === '') {
+                    containers[key].innerHTML = `<div class="col-span-full text-center text-slate-400 py-10">Belum ada data di Server.</div>`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
